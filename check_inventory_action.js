@@ -12,8 +12,7 @@ const productUrlsString = process.env.PRODUCT_URLS;
 const productsToMonitor = productUrlsString.split(/[,\n]+/).map(url => url.trim()).filter(url => url);
 
 // グローバル変数
-// 各商品の前回の在庫状態を記録するオブジェクト
-let previousStockStatus = {};
+let notificationSent = {};
 
 // メール送信用のトランスポーター設定
 const transporter = nodemailer.createTransport({
@@ -25,24 +24,15 @@ const transporter = nodemailer.createTransport({
 });
 
 // メール通知を送信する関数
-async function sendNotification(product, isInStock) {
+async function sendNotification(product) {
   try {
-    // 在庫状態に基づいて件名と本文を変更
-    const subject = isInStock 
-      ? `【在庫あり】${product.productName}` 
-      : `【在庫なし】${product.productName}`;
-    
-    const statusMessage = isInStock
-      ? '在庫が確認されました'
-      : '在庫がなくなりました';
-    
     // メール本文の構築
     const mailOptions = {
       from: emailUser,
       to: recipientEmail,
-      subject: subject,
+      subject: `【在庫あり】${product.productName}`,
       html: `
-        <h2>${statusMessage}</h2>
+        <h2>在庫が確認されました</h2>
         <p><strong>商品名:</strong> ${product.productName}</p>
         <p><strong>ステータス:</strong> ${product.status}</p>
         <p><strong>チェック時刻:</strong> ${product.checkedAt}</p>
@@ -78,23 +68,10 @@ async function run() {
       
       console.log(`📊 ${result.productName}: ${result.status}`);
       
-      // 商品IDとして使用するURLのユニークな部分を取得
-      const productId = url;
-      
-      // この商品の前回のステータスを取得（存在しない場合はundefined）
-      const previousStatus = previousStockStatus[productId];
-      
-      // 在庫状態が変化した場合のみ通知
-      if (previousStatus === undefined || previousStatus !== result.inStock) {
-        console.log(`🔄 在庫状態変化検出: ${result.productName} (${previousStatus === undefined ? '初回チェック' : previousStatus ? '在庫あり→なし' : '在庫なし→あり'})`);
-        
-        // 在庫状態に基づいて通知
-        await sendNotification(result, result.inStock);
-        
-        // 在庫状態を更新
-        previousStockStatus[productId] = result.inStock;
-      } else {
-        console.log(`🔄 在庫状態に変化なし: ${result.productName} (${result.inStock ? '在庫あり継続中' : '在庫なし継続中'})`);
+      // 在庫がある場合に通知
+      if (result.inStock) {
+        console.log(`🎉 在庫あり検出: ${result.productName}`);
+        await sendNotification(result);
       }
     } catch (error) {
       console.error(`❌ 予期せぬエラー (${url}):`, error);
