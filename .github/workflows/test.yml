@@ -1,0 +1,12 @@
+name: Simple Cron Test
+
+on:
+  schedule:
+    - cron: '*/1 * * * *'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo Time
+        run: date
