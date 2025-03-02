@@ -2,7 +2,7 @@ name: 在庫チェック
 
 on:
   schedule:
-    - cron: '*/10 * * * *'  # 10分ごとに実行
+    - cron: '*/1 * * * *'  # 1分ごとに実行
   workflow_dispatch:  # 手動実行用
   push:               # 追加: リポジトリへのプッシュでも実行されるように
     branches:
