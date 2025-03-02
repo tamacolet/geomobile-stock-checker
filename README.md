@@ -57,12 +57,12 @@ https://mvno.geo-mobile.jp/uqmobile/smartphone/iPhone12_simfree
 
 ### 自動実行
 
-デフォルトでは、GitHub Actions が 1 分ごとに自動的に在庫チェックを実行します。
+デフォルトでは、GitHub Actions が 5 分ごとに自動的に在庫チェックを実行します。
 この頻度は`.github/workflows/check-inventory.yml`ファイルの`cron`設定で変更できます。
 
 ```yaml
 schedule:
-  - cron: "*/1 * * * *" # 1分ごとに実行
+  - cron: "*/5 * * * *" # 5分ごとに実行
 ```
 
 ### 手動実行
