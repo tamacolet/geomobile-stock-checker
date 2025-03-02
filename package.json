@@ -1,0 +1,19 @@
+{
+  "name": "geomobile-stock-checker",
+  "version": "1.0.0",
+  "description": "GEOモバイル在庫チェッカー",
+  "main": "check_inventory_action.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "inventory",
+    "notification"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nodemailer": "^6.9.5",
+    "node-fetch": "^2.6.12"
+  }
+}
