@@ -4,6 +4,9 @@ on:
   schedule:
     - cron: '*/10 * * * *'  # 10分ごとに実行
   workflow_dispatch:  # 手動実行用
+  push:               # 追加: リポジトリへのプッシュでも実行されるように
+    branches:
+      - main          # mainブランチへのプッシュ時
 
 jobs:
   check:
