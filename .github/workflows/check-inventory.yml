@@ -1,0 +1,28 @@
+name: 在庫チェック
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'  # 10分ごとに実行
+  workflow_dispatch:  # 手動実行用
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Node.jsのセットアップ
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: 依存パッケージのインストール
+        run: npm ci
+        
+      - name: 在庫チェックの実行
+        env:
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
+          PRODUCT_URLS: ${{ secrets.PRODUCT_URLS }}
+        run: node check_inventory_action.js
