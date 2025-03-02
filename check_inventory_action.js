@@ -8,8 +8,8 @@ const emailPass = process.env.EMAIL_PASS;
 const recipientEmail = process.env.RECIPIENT_EMAIL;
 const productUrlsString = process.env.PRODUCT_URLS;
 
-// 商品URLリストを解析
-const productsToMonitor = productUrlsString.split(',').map(url => url.trim());
+// 商品URLリストを解析 (カンマまたは改行で区切る)
+const productsToMonitor = productUrlsString.split(/[,\n]+/).map(url => url.trim()).filter(url => url);
 
 // グローバル変数
 let notificationSent = {};
